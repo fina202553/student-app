@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}学生管理システム{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+    <h2>学生記録を管理する</h2>
+    <p>学生情報を簡単に追加、表示、管理できます</p>
+    </div>
+</section>
+
+<!-- Add Student Form -->
+<section class="form-section">
+    <h3>新しい学生を追加</h3>
+    <form action="{{ url_for('add_student') }}" method="POST" class="student-form" id="studentForm">
+    <div class="form-row">
+        <div class="form-group">
+        <label for="name">氏名 *</label>
+        <input type="text" id="name" name="name" required
+            placeholder="氏名を入力してください" maxlength="100">
+    </div>
+
+    <div class="form-group">
+        <label for="student_number">学生番号 *</label>
+        <input type="text" id="student_number" name="student_number" required
+            placeholder="学生番号を入力してください"  maxlength="20">
+        </div>
+
+        <div class="form-group">
+        <button type="submit" class="btn btn-primary">
+            <span class="btn-icon">+</span>
+            生徒を追加
+        </button>
+        </div>  
+    </div>
+    </form>
+</section>
+
+<!-- Search and Controls -->
+<section class="controls-section">
+    <div class="controls-row">
+    <form action="{{ url_for('search_students') }}" method="GET" class="search-form">
+        <div class="search-group">
+        <input type="text" name="query" value="{{ search_query or '' }}" 
+            placeholder="名前または学生番号で検索…">
+        <button type="submit" class="btn btn-secondary">
+            <span class="btn-icon">Q</span>
+            検索
+        </button>
+        {% if search_query %}
+        <a href="{{ url_for('index') }}" class="btn btn-outline">
+            検索をクリア
+        </a>
+        {% endif %}
+        </div>
+    </form>
+
+        <div class="stats">
+            <span class="stat-badge">学生数: {{ students|length }}</span>
+        </div>
+    </div>
+</section>
+
+<!-- Students Display -->
+<section class="students-section">
+    <h3>登録済みの学生</h3>
+
+    {% if students %}
+        <div class="students-grid">
+            {% for student in students %}
+                <div class="student-card" data-student-id="{{ student[0] }}">
+                    <div class="student-header">
+                        <h4 class="student-name">{{ student[1] }}</h4>
+                        <form action="{{ url_for('delete_student', student_id=student[0]) }}" 
+                            method="POST" class="delete-form"
+                            onsubmit="return confirm('{{ student[1] }} を削除しますか？');">
+                        <button type="submit" class="btn-delete" title="学生を削除">
+                            🗑
+                        </button>
+                    </form>
+                </div>
+                <div class="student-info">
+                    <div class="info-item">
+                        <span class="label">ID：</span>
+                        <span class="value">{{ student[2] }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">登録日：</span>
+                        <span class="value">{{ student[3].strftime('%Y-%m-%d %H:%M') }}</span>
+                    </div>
+                </div>
+                <div class="student-id">#{{ student[0] }}</div>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <div class="empty-state">
+            <div class="empty-icon"></div>
+            <h4>学生が見つかりません</h4>
+            <p>
+                {% if search_query %}
+                    検索 “{{ search_query }}” に一致する学生が見つかりませんでした。
+                    <a href="{{ url_for('index') }}">すべての学生を表示</a>
+                    {% else %}
+                        まだ学生が登録されていません。上のフォームを使用して最初の学生を追加してください！
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

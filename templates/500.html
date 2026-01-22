@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}サーバーエラー - 学生記録{% endblock %}
+
+{% block content %}
+<div class="error-page">
+<div class="error-content">
+    <div class="error-icon">🚧</div>
+    <h1>500 - サーバーエラー</h1>
+    <p>こちらで問題が発生しました。後ほど再度お試しください。</p>
+    <div class="error-actions">
+    <a href="{{ url_for('index') }}" class="btn btn-primary">ホームに戻る</a>
+    <button onclick="location.reload()" class="btn btn-secondary">再試行</button>
+    </div>
+</div>
+</div>
+
+<style>
+.error-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.error-content .error-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.error-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+  color: var(--dark-color);
+}
+
+.error-content p {
+  font-size: 1.1rem;
+  color: var(--gray-color);
+  margin-bottom: 30px;
+}
+
+.error-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+</style>
+{% endblock %}
